@@ -73,6 +73,7 @@ from core.middleware import (
     SecurityHeadersMiddleware,
     get_application_route_path,
     is_cors_preflight,
+    parse_allowed_origins,
     path_is_route_or_child,
     with_asgi_root_path,
 )
@@ -135,7 +136,7 @@ app = FastAPI(
 
 # ========= CORS =========
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost,http://127.0.0.1").split(",")
+allowed_origins = parse_allowed_origins(os.getenv("ALLOWED_ORIGINS"))
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,

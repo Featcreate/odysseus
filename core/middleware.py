@@ -150,3 +150,21 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
                 "frame-ancestors 'none'"
             )
         return response
+
+
+def parse_allowed_origins(value: str | None) -> list[str]:
+    """Parse the deployment CORS allowlist without accepting wildcard origins.
+
+    An unset or blank value keeps local development restricted to loopback.
+    Production deployments must explicitly list each trusted origin.
+    """
+    defaults = ["http://localhost", "http://127.0.0.1"]
+    if value is None or not value.strip():
+        return defaults
+
+    origins = [origin.strip() for origin in value.split(",") if origin.strip()]
+    if not origins:
+        return defaults
+    if "*" in origins:
+        raise ValueError("ALLOWED_ORIGINS must list explicit origins; wildcard '*' is not allowed")
+    return list(dict.fromkeys(origins))

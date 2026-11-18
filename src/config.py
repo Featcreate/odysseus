@@ -98,7 +98,10 @@ class SecurityConfig(BaseSettings):
     upload_rate_max_entries: int = Field(default=1000, description="Maximum number of rate limit entries to keep")
     
     # Security settings
-    allowed_origins: List[str] = Field(default=["*"], description="Allowed origins for CORS")
+    allowed_origins: List[str] = Field(
+        default=["http://localhost", "http://127.0.0.1"],
+        description="Allowed origins for CORS; production deployments must configure explicit public origins"
+    )
     max_file_size: int = Field(default=10 * 1024 * 1024, description="Maximum file size in bytes")
     dangerous_file_types: List[str] = Field(
         default=[
